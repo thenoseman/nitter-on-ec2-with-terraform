@@ -19,8 +19,6 @@ This terraform setup creates a [nitter deployment](https://github.com/zedeus/nit
 └────────────────────┘
 ```
 
-
-
 ## Usage
 
 You can configure the instance type and the username later needed to access the nitter instance.
