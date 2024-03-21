@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+[[ $(id -u) -eq 0 ]] || exec sudo -E "$${BASH_SOURCE[0]}"
+
+# Install and start docker
+dnf install -y docker git-core
+systemctl enable docker
+systemctl start docker
+
+# Install docker-compose (not docker commpose!)
+curl -sqL "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+docker-compose version
+
+# Download sources
+echo "> Fetching sources"
+cd /home/ec2-user || exit 1
+git clone --depth 1 https://github.com/sekai-soft/guide-nitter-self-hosting
+cd guide-nitter-self-hosting || exit 1
+
+# Write twitter auth
+echo "> Writing nitter auth data"
+# shellcheck disable=SC2016
+echo '${NITTER_GUEST_AUTH_JSON}' >nitter-guest_accounts.json
+
+# Update nitter.conf
+echo "> Writing nitter.conf"
+mv nitter.example.conf nitter.conf
+TOKEN=$(curl -sqL -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+# shellcheck disable=SC2034
+PUBLIC_HOSTNAME=$(curl -sqL -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/public-hostname)
+sed -i"" "s/hostname.*=.*/hostname = \"$PUBLIC_HOSTNAME\"/g" nitter.conf
+
+# Generate htpasswd
+echo "> Writing .htpasswd"
+# shellcheck disable=SC2086,SC2016
+printf '${BASIC_AUTH_USERNAME}:%s\n' "$(openssl passwd -5 ${BASIC_AUTH_PASSWORD})" >.htpasswd
+
+# Update nitter guarding
+echo "> Writing nitter-guardian.nginx.conf"
+mv nitter-guardian.nginx.example.conf nitter-guardian.nginx.conf
+sed -i"" "s/RSS_PASSWORD/${BASIC_AUTH_PASSWORD}/g" nitter-guardian.nginx.conf
+
+# Start everything
+docker-compose -f docker-compose.nitter.yml up -d --scale nitter-auth=0

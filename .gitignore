@@ -1,0 +1,6 @@
+.terraform
+.terraform.lock.hcl
+.state
+.envrc
+guide-nitter-self-hosting
+_variables.auto.tfvars
