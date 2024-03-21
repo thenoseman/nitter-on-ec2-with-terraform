@@ -24,7 +24,7 @@ This terraform setup creates a [nitter deployment](https://github.com/zedeus/nit
 ## Usage
 
 You can configure the instance type and the username later needed to access the nitter instance.
-See `basic_auth_username` and `instance_type`  in `variables.tf`.
+See  `variables.tf`.
 
 The following is copied from [sekai-soft/guide-nitter-self-hosting](https://github.com/sekai-soft/guide-nitter-self-hosting/blob/master/docs/i-only-want-a-nitter-instance.md):
 
@@ -40,7 +40,7 @@ The following is copied from [sekai-soft/guide-nitter-self-hosting](https://gith
 
 3. Execute the last "echo" line as advised. The authentication will be read by the terraform setup.
 
-4. To set variables create `variables.auto.tfvars` and fill `basic_auth_username` and/or `instance_type`.
+4. To set variables create `variables.auto.tfvars`.
 
 5. Do the usual `terraform init` and `terraform apply` you will get the following output:
 
