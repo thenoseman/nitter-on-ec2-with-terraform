@@ -25,10 +25,11 @@ echo '${NITTER_GUEST_AUTH_JSON}' >nitter-guest_accounts.json
 # Update nitter.conf
 echo "> Writing nitter.conf"
 mv nitter.example.conf nitter.conf
-TOKEN=$(curl -sqL -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
-# shellcheck disable=SC2034
+TOKEN=$(curl -sqL -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 30")
 PUBLIC_HOSTNAME=$(curl -sqL -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/public-hostname)
-sed -i"" "s/hostname.*=.*/hostname = \"$PUBLIC_HOSTNAME\"/g" nitter.conf
+sed -i"" "s/hostname =.*/hostname = \"$PUBLIC_HOSTNAME\"/g" nitter.conf
+sed -i"" "s/title =.*/title = \"${NITTER_TITLE}\"/g" nitter.conf
+sed -i"" "s/theme =.*/theme = \"${NITTER_THEME}\"/g" nitter.conf
 
 # Generate htpasswd
 echo "> Writing .htpasswd"

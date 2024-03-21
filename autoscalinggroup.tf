@@ -19,10 +19,13 @@ resource "aws_launch_template" "nitter" {
     }
   }
 
+  # Userdata installs everything:
   user_data = base64encode(templatefile("${path.module}/userdata.sh.tftpl", {
     BASIC_AUTH_PASSWORD    = random_pet.password.id
     BASIC_AUTH_USERNAME    = var.basic_auth_username
     NITTER_GUEST_AUTH_JSON = file("${path.module}/guide-nitter-self-hosting/nitter-guest_accounts.json")
+    NITTER_TITLE           = var.nitter_title
+    NITTER_THEME           = var.nitter_theme
   }))
 }
 
