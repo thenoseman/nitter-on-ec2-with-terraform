@@ -1,6 +1,3 @@
-#
-# OUTPUT
-#
 output "lib-redirect-twitter-url" {
   value = <<-EOV
   USAGE WITH LIB-REDIRECT CHROME EXTENSION:

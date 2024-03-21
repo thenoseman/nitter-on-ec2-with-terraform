@@ -1,9 +1,10 @@
 resource "aws_lb_target_group" "nitter" {
-  name        = "nitter"
-  port        = 8080
-  target_type = "instance"
-  protocol    = "TCP"
-  vpc_id      = data.aws_vpc.default.id
+  name                 = "nitter"
+  port                 = 8080
+  target_type          = "instance"
+  protocol             = "TCP"
+  vpc_id               = data.aws_vpc.default.id
+  deregistration_delay = 30
 
   health_check {
     healthy_threshold   = 2
