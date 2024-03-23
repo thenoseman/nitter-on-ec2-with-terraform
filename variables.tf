@@ -1,11 +1,25 @@
 variable "basic_auth_username" {
-  type    = string
-  default = "nitter"
+  description = "The basic auth username you use to access the instance"
+  type        = string
+  default     = "nitter"
 }
 
 variable "instance_type" {
-  type    = string
-  default = "t4g.micro"
+  description = "Instance type"
+  type        = string
+  default     = "t4g.micro"
+}
+
+variable "deactivate_instance_cron" {
+  description = "Deactivate the instance at a specified time every day. Might save some money, see https://crontab.guru/"
+  type        = string
+  default     = ""
+}
+
+variable "activate_instance_cron" {
+  description = "Activate the instance at a specified time every day, see https://crontab.guru/"
+  type        = string
+  default     = ""
 }
 
 variable "nitter_title" {

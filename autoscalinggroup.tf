@@ -57,3 +57,27 @@ resource "aws_autoscaling_group" "nitter" {
     propagate_at_launch = true
   }
 }
+
+resource "aws_autoscaling_schedule" "turn_on" {
+  count = var.activate_instance_cron == "" ? 0 : 1
+
+  autoscaling_group_name = aws_autoscaling_group.nitter.name
+  scheduled_action_name  = "turn instance on"
+
+  min_size         = 1
+  max_size         = 1
+  desired_capacity = 1
+  recurrence       = var.activate_instance_cron
+}
+
+resource "aws_autoscaling_schedule" "turn_off" {
+  count = var.deactivate_instance_cron == "" ? 0 : 1
+
+  autoscaling_group_name = aws_autoscaling_group.nitter.name
+  scheduled_action_name  = "turn instance off"
+
+  min_size         = 0
+  max_size         = 0
+  desired_capacity = 0
+  recurrence       = var.deactivate_instance_cron
+}
