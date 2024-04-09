@@ -23,8 +23,6 @@ resource "aws_lb" "nitter" {
   ip_address_type    = "ipv4"
   security_groups    = [aws_default_security_group.default.id]
   subnets            = data.aws_subnets.default.ids
-
-  enable_deletion_protection = true
 }
 
 resource "aws_lb_listener" "nitter" {
